@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 // Global Veriables
-#define 
+#define MAX_PAS_LENGTH 
 
 void print_execution(int line, char *opname, int *IR, int PC, int BP, int SP, int DP, int *pas, int GP)
 {
