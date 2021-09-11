@@ -40,5 +40,5 @@ int base(int L)
 
 int main(int argc, char **argv)
 {
-    
+        printf(“    PC   BP   SP   DP   data");
 }
