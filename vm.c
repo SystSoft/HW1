@@ -5,8 +5,15 @@
 #include "tester.sh"
 #include <stdio.h>
 
-// Global Veriables
+// Global Variables
 #define MAX_PAS_LENGTH 500
+
+struct instruction
+{
+    int OP;         // Operation code
+    int L;          // Lexicographical level
+    int M;          // Modifier
+};
 
 void print_execution(int line, char *opname, int *IR, int PC, int BP, int SP, int DP, int *pas, int GP)
 {
@@ -38,7 +45,39 @@ int base(int L)
     return arb;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char *argv[])
 {
-        printf(“    PC   BP   SP   DP   data");
+    FILE *ifp = fopen(argv[1], "r");
+    
+    int i, opercode, lexlev, mod;          // temporary variables for scanning input
+    instruction IR[MAX_PAS_LENGTH];
+    
+    
+    i = 0;
+    while (fscanf(ifp, "%d %d %d", opercode, lexlev, mod) != EOF)
+    {
+        struct instruction *new = malloc(sizeof(struct instruction));
+        new.OP = opercode;
+        new.L = lexlev;
+        new.M = mod;
+        
+        IR[i] = new;
+        i++
+     }
+    
+    
+    // Print headers
+    printf(“    PC   BP   SP   DP   data");
+           
+    // Fetch Cycle
+           
+    // Execute Cycle
+    switch()
+    {
+        case 1:
+            df
+              
+            
+    }
+   
 }
