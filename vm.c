@@ -52,8 +52,8 @@ int main(int argc, char *argv[])
     FILE *ifp = fopen(argv[1], "r");
     
     int *pas = calloc(MAX_PAS_LENGTH, sizeof(int));
-    int i, j, opercode, lexlev, mod;          // temporary variables for scanning input
-    int IR[MAX_PAS_LENGTH];
+    int i;          // temporary variables for scanning input
+    struct instruction IR = malloc(sizeof(struct instruction));
    
     // Initial Values
     int IC = 0;
@@ -64,34 +64,74 @@ int main(int argc, char *argv[])
     int PC = 0;         // Program counter 
     int SP = MAX_PAS_LENGTH;
     
-    // Fetch Cycle
-    // Scan in registers from input and organize into catagories in a structure
     i = 0;
-    while (fscanf(ifp, "%d %d %d", opercode, lexlev, mod) != EOF)
+    // Scan in registers from input and organize into catagories in a structure
+    while (fscanf(ifp, "%d", pas[PC]) != EOF)
     {
-        struct instruction *new = malloc(sizeof(struct instruction));
-        new.OP = opercode;
-        new.L = lexlev;
-        new.M = mod;
-        
-        // put each set of instructions into an array 
-        IR[i] = new;
         i++
-     }
-    
+    }
     
     // Print headers
     printf(“    PC   BP   SP   DP   data\n");
-           
     
-    // Execute Cycle
-    PC = 0;
     while (PC != i)
     {
-            switch(IR[PC]OP)
-            {
-                case 1:
-                    df
+        // Fetch Cycle
+        IR.OP = pas[PC];
+        IR.L = pas[PC+1];
+        IR.M = pas[PC+2];
+        PC += 3;
+        // Execute Cycle
+                switch(IR.OP)
+                {
+                    case 1:
+                        break;
+                    case 2:
+                        break;
+                    case 3:
+                        break;
+                    case 4:
+                        break;
+                    case 5:
+                        break;
+                    case 6:
+                        break;
+                    case 7:
+                        break;
+                    case 8:
+                        break;
+                    // SYS
+                    case 9:
+                        switch(IR.M)
+                        {
+                            case
+                            if (bp == gp)
+                            {
+                                printf(“%d”, pas[dp]); 
+                                dp = dp -1;
+                            }
+                            else
+                            {
+                                printf(“%d”, pas[sp]); 
+                                sp = sp + 1;
+                            }
+
+                            if (bp == gp)
+                            {
+                                dp = dp + 1;
+                                printf("Please Enter an Integer: ");
+                                scanf("%d", pad[dp]);
+                            }
+                            else
+                            {
+                                sp = sp - 1;
+                                scanf(“%d”, pas[sp]);
+                            }
+                        }
+                        break;
+                    
+                        
+                     
 
             
     }
