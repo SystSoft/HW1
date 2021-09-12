@@ -1,8 +1,7 @@
 /* Fall 2021 COP 3402 HW1 */
 /* Anjaly Davis, Jennifer Nguyen */
-/* September 12rd, 2021 */
+/* September 15th, 2021 */
 
-#include "tester.sh"
 #include <stdio.h>
 
 // Global Variables
@@ -65,6 +64,7 @@ int main(int argc, char *argv[])
     int PC = 0;         // Program counter 
     int SP = MAX_PAS_LENGTH;
     
+    // Fetch Cycle
     // Scan in registers from input and organize into catagories in a structure
     i = 0;
     while (fscanf(ifp, "%d %d %d", opercode, lexlev, mod) != EOF)
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
     PC = 0;
     while (PC != i)
     {
-            switch(IR.OP)
+            switch(IR[PC]OP)
             {
                 case 1:
                     df
