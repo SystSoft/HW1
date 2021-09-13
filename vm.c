@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     
     i = 0;
     // Scan in registers from input and organize into catagories in a structure
-    while (fscanf(ifp, "%d", pas[PC]) != EOF)
+    while (fscanf(ifp, "%d", &pas[PC]) != EOF)
     {
         i++;
     }
@@ -409,12 +409,12 @@ int main(int argc, char *argv[])
                  {
                       DP = DP + 1;
                       printf("Please Enter an Integer: ");
-                      scanf("%d", pas[DP]);
+                      scanf("%d", &pas[DP]);
                  }
                  else
                  {
                       SP = SP - 1;
-                      scanf("%d", pas[SP]);
+                      scanf("%d", &pas[SP]);
                  }
              }
              break;
