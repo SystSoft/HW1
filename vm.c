@@ -82,54 +82,345 @@ int main(int argc, char *argv[])
         IR.M = pas[PC+2];
         PC += 3;
         // Execute Cycle
-                switch(IR.OP)
-                {
-                    case 1:
-                        break;
-                    case 2:
-                        break;
-                    case 3:
-                        break;
-                    case 4:
-                        break;
-                    case 5:
-                        break;
-                    case 6:
-                        break;
-                    case 7:
-                        break;
-                    case 8:
-                        break;
-                    // SYS
-                    case 9:
-                        switch(IR.M)
-                        {
-                            case
-                            if (bp == gp)
-                            {
-                                printf(“%d”, pas[dp]); 
-                                dp = dp -1;
-                            }
-                            else
-                            {
-                                printf(“%d”, pas[sp]); 
-                                sp = sp + 1;
-                            }
 
-                            if (bp == gp)
-                            {
-                                dp = dp + 1;
-                                printf("Please Enter an Integer: ");
-                                scanf("%d", pad[dp]);
-                            }
-                            else
-                            {
-                                sp = sp - 1;
-                                scanf(“%d”, pas[sp]);
-                            }
-                        }
-                        break;
-                    
+switch(IR.OP)
+{
+	//LIT
+    case 1:
+            
+		fprintf(ofp, "LIT\t");
+		if(bp == gp)
+		{
+			dp = dp+1;
+			pas[dp] = M;
+        }
+		else
+        {
+			sp = sp-1;
+			pas[sp] = M;
+		}
+		break;
+	
+	//RTN
+	case 2:
+		fprintf(ofp, "RTN\t");
+		sp = bp + 1;
+		bp = pas[sp-2];
+		pc = pas[sp-3];
+		break;
+		
+	//NEG
+	case 3:
+		fprintf(ofp, "NEG\t");
+		if(bp == gp)
+		{
+			pas[dp] = -1*pas[dp];
+        }
+		else
+        {
+			pas[sp] = -1*pas[sp];
+		}
+        break;		
+		
+	//ADD
+	case 4:
+		fprintf(ofp, "ADD\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] + pas[dp+1];
+        }
+		else
+        {
+			sp = sp+1;
+			pas[sp] = pas[sp] + pas[sp-1];
+		}
+		break;
+	
+	//SUB
+	case 5:
+		fprintf(ofp, "SUB\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] - pas[dp+1];
+        }
+		else
+        {
+			sp = sp+1;
+			pas[sp] = pas[sp] - pas[sp-1];
+		}
+		break;
+	
+	//MUL
+	case 6:
+		fprintf(ofp, "MUL\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] * pas[dp+1];
+        }
+		else
+        {
+			sp = sp+1;
+			pas[sp] = pas[sp] * pas[sp-1];
+		}
+		break;
+		
+	//DIV
+	case 7:
+		fprintf(ofp, "DIV\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] / pas[dp+1];
+        }
+		else
+        {
+			sp = sp+1;
+			pas[sp] = pas[sp] / pas[sp-1];
+		}
+		break;
+		
+	//ODD
+	case 8:
+		fprintf(ofp, "ODD\t");
+		if(bp == gp)
+		{
+			pas[dp] = pas[dp] % 2;
+        }
+		else
+        {
+			pas[sp] = pas[sp] % 2;
+		}
+		break;
+		
+	//MOD
+	case 9:
+		fprintf(ofp, "MOD\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] % pas[dp+1];
+        }
+		else
+        {
+			sp = sp+1;
+			pas[sp] = pas[sp] % pas[sp-1];
+		}
+		break;
+		
+	//EQL
+	case 10:
+		fprintf(ofp, "EQL\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] == pas[dp+1];
+        }
+		else
+        {
+			sp= sp+1;
+			pas[sp] = pas[sp] == pas[sp-1];
+		}
+		break;
+		
+	//NEQ
+	case 11:
+		fprintf(ofp, "NEQ\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] != pas[dp+1];
+        }
+		else
+        {
+			sp = sp+1;
+			pas[sp] = pas[sp] != pas[sp-1];
+		}
+		break;
+		
+	//LSS
+	case 12:
+		fprintf(ofp, "LSS\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] < pas[dp+1];
+        }
+		else
+        {
+			sp = sp+1;
+			pas[sp] = pas[sp] < pas[sp-1];
+		}
+		break;
+		
+	//LEQ
+	case 13:
+		fprintf(ofp, "LEQ\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] <= pas[dp+1];
+        }
+		else
+        {
+			sp = sp+1;
+			pas[sp] = pas[sp] <= pas[sp-1];
+		}
+		break;
+		
+	//GTR
+	case 14:
+		fprintf(ofp, "GTR\t");
+		if(bp == gp)
+		{
+			dp = dp - 1;
+			pas[dp] = pas[dp] > pas[dp+1];
+        }
+		else	
+        {    
+			sp = sp+1;
+			pas[sp] = pas[sp] > pas[sp-1];
+		}
+		break;
+		
+	//GEQ
+	case 15:
+		fprintf(ofp, "GEQ\t");
+		if(bp == gp)
+		{
+			dp = dp-1;
+			pas[dp] = pas[dp] >= pas[dp+1];
+        }
+		else
+        {
+			sp sp+1;
+			pas[sp] = pas[sp] >= pas[sp-1];
+        }
+		break;
+		
+	//LOD
+	case 16:
+		fprintf(ofp, "LOD\t");
+		if(bp == gp)
+		{
+			dp = dp+1;
+			pas[dp] = pas[gp+M];
+        }	
+		else if(base(L) == gp)
+        {
+			sp = sp-1;
+			pas[sp] = pas[gp+M];
+        }
+		else
+        {
+			sp = sp-1;
+			pas[sp] = pas[base(L)-M];
+        }
+		break;
+		
+	//STO
+	case 17:
+		fprintf(ofp, "STO\t");
+		if(bp == gp)
+		{
+			pas[gp+M] = pas[dp];
+			dp = dp-1;
+        }
+		else if(base(L) == gp)
+        {
+			pas[gp+M] = pas[sp];
+			sp = sp+1;
+        }
+		else
+        {
+			pas[base(L)-M] = pas[sp];
+			sp = sp+1;
+        }
+		break;
+		
+	//CAL
+	case 18:
+		fprintf(ofp, "CAL\t");
+		pas[sp-1] = base(L);
+		pas[sp-2] = bp;
+		pas[sp-3] = pc;
+		bp = sp-1;
+		pc = M;
+		break;
+		
+	//INC
+	case 19:
+		fprintf(ofp, "INC\t");
+		if(bp == gp)
+		{
+			dp = dp+M;
+        }
+		else
+        {
+			sp = sp-M;
+		}
+		break;
+		
+	//JMP
+	case 20:
+		fprintf(ofp, "JMP\t");
+		pc = M;
+		break;
+		
+	//JPC
+	case 21:
+		fprintf(ofp, "JPC\t");
+		if(bp == gp)
+		{
+			if(pas[dp] == 0
+			{
+				pc = M;
+			}
+			dp = dp-1;
+			
+		else if(pas[sp] == 0
+		{
+			pc = M;
+		}
+		sp = sp+1;
+		}
+		break;
+		
+  // SYS
+  case 22:
+      switch(IR.M)
+      {
+         fprintf(ofp, "SYS\t");
+         if (bp == gp)
+         {
+             printf(“%d”, pas[dp]); 
+             dp = dp -1;
+         }
+         else
+         {
+              printf(“%d”, pas[sp]); 
+              sp = sp + 1;
+         }
+
+         if (bp == gp)
+         {
+              dp = dp + 1;
+              printf("Please Enter an Integer: ");
+              scanf("%d", pad[dp]);
+         }
+         else
+         {
+              sp = sp - 1;
+              scanf(“%d”, pas[sp]);
+         }
+     }
+     break;
+ default:
+     fprintf(ofp, "err\t");
+     return;
+ }
                         
                      
 
