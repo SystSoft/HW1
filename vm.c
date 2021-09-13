@@ -88,18 +88,18 @@ switch(IR.OP)
 	//LIT
     case 1:
             
-		fprintf(ofp, "LIT\t");
-		if(bp == gp)
-		{
-			dp = dp+1;
-			pas[dp] = M;
+	fprintf(ofp, "LIT\t");
+	if(bp == gp)
+	{
+		dp = dp+1;
+		pas[dp] = M;
         }
-		else
+	else
         {
-			sp = sp-1;
-			pas[sp] = M;
-		}
-		break;
+		sp = sp-1;
+		pas[sp] = M;
+	}
+	break;
 	
 	//RTN
 	case 2:
@@ -115,12 +115,12 @@ switch(IR.OP)
 		if(bp == gp)
 		{
 			pas[dp] = -1*pas[dp];
-        }
+        	}
 		else
-        {
+        	{
 			pas[sp] = -1*pas[sp];
 		}
-        break;		
+        	break;		
 		
 	//ADD
 	case 4:
@@ -129,9 +129,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] + pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp+1;
 			pas[sp] = pas[sp] + pas[sp-1];
 		}
@@ -144,9 +144,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] - pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp+1;
 			pas[sp] = pas[sp] - pas[sp-1];
 		}
@@ -159,9 +159,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] * pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp+1;
 			pas[sp] = pas[sp] * pas[sp-1];
 		}
@@ -174,9 +174,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] / pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp+1;
 			pas[sp] = pas[sp] / pas[sp-1];
 		}
@@ -188,9 +188,9 @@ switch(IR.OP)
 		if(bp == gp)
 		{
 			pas[dp] = pas[dp] % 2;
-        }
+        	}
 		else
-        {
+        	{
 			pas[sp] = pas[sp] % 2;
 		}
 		break;
@@ -202,9 +202,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] % pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp+1;
 			pas[sp] = pas[sp] % pas[sp-1];
 		}
@@ -217,9 +217,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] == pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp= sp+1;
 			pas[sp] = pas[sp] == pas[sp-1];
 		}
@@ -232,9 +232,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] != pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp+1;
 			pas[sp] = pas[sp] != pas[sp-1];
 		}
@@ -247,9 +247,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] < pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp+1;
 			pas[sp] = pas[sp] < pas[sp-1];
 		}
@@ -262,9 +262,9 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] <= pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp+1;
 			pas[sp] = pas[sp] <= pas[sp-1];
 		}
@@ -277,9 +277,9 @@ switch(IR.OP)
 		{
 			dp = dp - 1;
 			pas[dp] = pas[dp] > pas[dp+1];
-        }
+        	}
 		else	
-        {    
+        	{    
 			sp = sp+1;
 			pas[sp] = pas[sp] > pas[sp-1];
 		}
@@ -292,12 +292,12 @@ switch(IR.OP)
 		{
 			dp = dp-1;
 			pas[dp] = pas[dp] >= pas[dp+1];
-        }
+        	}
 		else
-        {
+        	{
 			sp sp+1;
 			pas[sp] = pas[sp] >= pas[sp-1];
-        }
+        	}
 		break;
 		
 	//LOD
@@ -307,17 +307,17 @@ switch(IR.OP)
 		{
 			dp = dp+1;
 			pas[dp] = pas[gp+M];
-        }	
+        	}	
 		else if(base(L) == gp)
-        {
+        	{
 			sp = sp-1;
 			pas[sp] = pas[gp+M];
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp-1;
 			pas[sp] = pas[base(L)-M];
-        }
+        	}
 		break;
 		
 	//STO
@@ -327,17 +327,17 @@ switch(IR.OP)
 		{
 			pas[gp+M] = pas[dp];
 			dp = dp-1;
-        }
+        	}
 		else if(base(L) == gp)
-        {
+        	{
 			pas[gp+M] = pas[sp];
 			sp = sp+1;
-        }
+        	}
 		else
-        {
+        	{
 			pas[base(L)-M] = pas[sp];
 			sp = sp+1;
-        }
+        	}
 		break;
 		
 	//CAL
@@ -356,9 +356,9 @@ switch(IR.OP)
 		if(bp == gp)
 		{
 			dp = dp+M;
-        }
+        	}
 		else
-        {
+        	{
 			sp = sp-M;
 		}
 		break;
@@ -380,11 +380,11 @@ switch(IR.OP)
 			}
 			dp = dp-1;
 			
-		else if(pas[sp] == 0
-		{
-			pc = M;
-		}
-		sp = sp+1;
+			else if(pas[sp] == 0
+			{
+				pc = M;
+			}
+			sp = sp+1;
 		}
 		break;
 		
@@ -420,13 +420,6 @@ switch(IR.OP)
  default:
      fprintf(ofp, "err\t");
      return;
- }
-                        
-                     
-
-            
-    }
-   
-           
-   
+ }                        
+}
 }
