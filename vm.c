@@ -37,7 +37,7 @@ void print_execution(int line, char *opname, struct instruction *IR, int PC, int
         printf("%d ", pas[i]);printf("\n");
 }
 
-int base(int L)
+int base(int L, int *pas, int BP)
 {
     int arb = BP;   // arb = activation record base
     while ( L > 0)     //find base L levels down
@@ -94,7 +94,6 @@ int main(int argc, char *argv[])
         {
             //LIT
             case 1:
-            print_execution(PC/3, opname[1], IR, PC, BP, SP, DP, pas, GP);
             if(BP == GP)
             {
                 DP = DP+1;
@@ -105,6 +104,7 @@ int main(int argc, char *argv[])
                 SP = SP-1;
                 pas[SP] = IR->M;
             }
+            print_execution(PC/3, "LIT", IR, PC, BP, SP, DP, pas, GP);
             break;
 
             //RTN
@@ -124,6 +124,7 @@ int main(int argc, char *argv[])
                 {
                     pas[SP] = -1*pas[SP];
                 }
+                print_execution(PC/3, opname[2], IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //ADD
@@ -138,6 +139,7 @@ int main(int argc, char *argv[])
                     SP = SP+1;
                     pas[SP] = pas[SP] + pas[SP-1];
                 }
+                print_execution(PC/3, opname[1], IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //SUB
@@ -310,7 +312,7 @@ int main(int argc, char *argv[])
                     DP = DP+1;
                     pas[DP] = pas[GP+IR->M];
                 }
-                else if(base(IR->L) == GP)
+                else if(base(IR->L, pas, BP) == GP)
                 {
                     SP = SP-1;
                     pas[SP] = pas[GP+IR->M];
@@ -318,7 +320,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     SP = SP-1;
-                    pas[SP] = pas[base(IR->L)-IR->M];
+                    pas[SP] = pas[base(IR->L, pas, BP)-IR->M];
                 }
                 break;
 
@@ -330,14 +332,14 @@ int main(int argc, char *argv[])
                     pas[GP+IR->M] = pas[DP];
                     DP = DP-1;
                 }
-                else if(base(IR->L) == GP)
+                else if(base(IR->L, pas, BP) == GP)
                 {
                     pas[GP+IR->M] = pas[SP];
                     SP = SP+1;
                 }
                 else
                 {
-                    pas[base(IR->L)-IR->M] = pas[SP];
+                    pas[base(IR->L, pas, BP)-IR->M] = pas[SP];
                     SP = SP+1;
                 }
                 break;
@@ -345,7 +347,7 @@ int main(int argc, char *argv[])
             //CAL
             case 18:
               
-                pas[SP-1] = base(IR->L);
+                pas[SP-1] = base(IR->L, pas, BP);
                 pas[SP-2] = BP;
                 pas[SP-3] = PC;
                 BP = SP-1;
@@ -381,8 +383,10 @@ int main(int argc, char *argv[])
                         PC = IR->M;
                     }
                     DP = DP-1;
-
-                    else if(pas[SP] == 0)
+                }
+                else
+                {
+                    if(pas[SP] == 0)
                     {
                         PC = IR->M;
                     }
