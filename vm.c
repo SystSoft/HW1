@@ -74,8 +74,8 @@ int main(int argc, char *argv[])
     }
     
     i = 0;
-    // Scan in registers from input and organize into catagories in a structure
-    while (fscanf(ifp, "%d", &pas[PC]) != EOF)
+    // Scan in registers from input
+    while (fscanf(ifp, "%d", &pas[i]) != EOF)
     {
         i++;
     }
@@ -83,7 +83,7 @@ int main(int argc, char *argv[])
     // Print headers
     printf("    PC   BP   SP   DP   data\n");
     
-    while (PC != i)
+    while (PC <= i)
     {
         // Fetch Cycle
         IR->OP = pas[PC];
