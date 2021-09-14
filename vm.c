@@ -118,6 +118,134 @@ int main(int argc, char *argv[])
                         PC = pas[SP-3];
                         print_execution(PC/3, "RTN", IR, PC, BP, SP, DP, pas, GP);
                         break;
+                    //LOD
+            case 3:
+                if(BP == GP)
+                {
+                    DP = DP+1;
+                    pas[DP] = pas[GP+IR->M];
+                }
+                else if(base(IR->L, pas, BP) == GP)
+                {
+                    SP = SP-1;
+                    pas[SP] = pas[GP+IR->M];
+                }
+                else
+                {
+                    SP = SP-1;
+                    pas[SP] = pas[base(IR->L, pas, BP)-IR->M];
+                }
+                print_execution(PC/3, "LOD", IR, PC, BP, SP, DP, pas, GP);
+                break;
+
+            //STO
+            case 4:
+                if(BP == GP)
+                {
+                    pas[GP+IR->M] = pas[DP];
+                    DP = DP-1;
+                }
+                else if(base(IR->L, pas, BP) == GP)
+                {
+                    pas[GP+IR->M] = pas[SP];
+                    SP = SP+1;
+                }
+                else
+                {
+                    pas[base(IR->L, pas, BP)-IR->M] = pas[SP];
+                    SP = SP+1;
+                }
+                print_execution(PC/3, "STO", IR, PC, BP, SP, DP, pas, GP);
+                break;
+
+            //CAL
+            case 5:
+                pas[SP-1] = base(IR->L, pas, BP);
+                pas[SP-2] = BP;
+                pas[SP-3] = PC;
+                BP = SP-1;
+                PC = IR->M;
+                print_execution(PC/3, "CAL", IR, PC, BP, SP, DP, pas, GP);
+                break;
+
+            //INC
+            case 6:
+                if(BP == GP)
+                {
+                    DP = DP+IR->M;
+                }
+                else
+                {
+                    SP = SP-IR->M;
+                }
+                print_execution(PC/3, "INC", IR, PC, BP, SP, DP, pas, GP);
+                break;
+
+            //JMP
+            case 7:
+                PC = IR->M;
+                print_execution(PC/3, "JMP", IR, PC, BP, SP, DP, pas, GP);
+                break;
+
+            //JPC
+            case 8:
+                if(BP == GP)
+                {
+                    if(pas[DP] == 0)
+                    {
+                        PC = IR->M;
+                    }
+                    DP = DP-1;
+                }
+                else
+                {
+                    if(pas[SP] == 0)
+                    {
+                        PC = IR->M;
+                    }
+                    SP = SP+1;
+                }
+                print_execution(PC/3, "JPC", IR, PC, BP, SP, DP, pas, GP);
+                break;
+
+          // SYS
+          case 9:
+              switch(IR->M)
+              {
+                  case 1:
+                      printf("Top of Stack Value: ###########");
+                     if (BP == GP)
+                     {
+                         printf("%d", pas[DP]);
+                         DP = DP -1;
+                     }
+                     else
+                     {
+                          printf("%d", pas[SP]);
+                          SP = SP + 1;
+                     }
+                    break;
+                    
+                  case 2:
+                    printf("Please Enter an Integer: ");
+                    scanf("%d", &pas[DP]);
+                     if (BP == GP)
+                     {
+                          DP = DP + 1;
+                     }
+                     else
+                     {
+                          SP = SP - 1;
+                          scanf("%d", &pas[SP]);
+                     }
+                    break;
+                  case 3:
+                      halt = 0;
+                      break;
+                      
+             }
+            print_execution(PC/3, "SYS", IR, PC, BP, SP, DP, pas, GP);
+             break;
 
                     //NEG
                     case 1:
@@ -311,136 +439,7 @@ int main(int argc, char *argv[])
                         break;
                 }
                 break;
-                
-            //LOD
-            case 3:
-                if(BP == GP)
-                {
-                    DP = DP+1;
-                    pas[DP] = pas[GP+IR->M];
-                }
-                else if(base(IR->L, pas, BP) == GP)
-                {
-                    SP = SP-1;
-                    pas[SP] = pas[GP+IR->M];
-                }
-                else
-                {
-                    SP = SP-1;
-                    pas[SP] = pas[base(IR->L, pas, BP)-IR->M];
-                }
-                print_execution(PC/3, "LOD", IR, PC, BP, SP, DP, pas, GP);
-                break;
-
-            //STO
-            case 4:
-                if(BP == GP)
-                {
-                    pas[GP+IR->M] = pas[DP];
-                    DP = DP-1;
-                }
-                else if(base(IR->L, pas, BP) == GP)
-                {
-                    pas[GP+IR->M] = pas[SP];
-                    SP = SP+1;
-                }
-                else
-                {
-                    pas[base(IR->L, pas, BP)-IR->M] = pas[SP];
-                    SP = SP+1;
-                }
-                print_execution(PC/3, "STO", IR, PC, BP, SP, DP, pas, GP);
-                break;
-
-            //CAL
-            case 5:
-                pas[SP-1] = base(IR->L, pas, BP);
-                pas[SP-2] = BP;
-                pas[SP-3] = PC;
-                BP = SP-1;
-                PC = IR->M;
-                print_execution(PC/3, "CAL", IR, PC, BP, SP, DP, pas, GP);
-                break;
-
-            //INC
-            case 6:
-                if(BP == GP)
-                {
-                    DP = DP+IR->M;
-                }
-                else
-                {
-                    SP = SP-IR->M;
-                }
-                print_execution(PC/3, "INC", IR, PC, BP, SP, DP, pas, GP);
-                break;
-
-            //JMP
-            case 7:
-                PC = IR->M;
-                print_execution(PC/3, "JMP", IR, PC, BP, SP, DP, pas, GP);
-                break;
-
-            //JPC
-            case 8:
-                if(BP == GP)
-                {
-                    if(pas[DP] == 0)
-                    {
-                        PC = IR->M;
-                    }
-                    DP = DP-1;
-                }
-                else
-                {
-                    if(pas[SP] == 0)
-                    {
-                        PC = IR->M;
-                    }
-                    SP = SP+1;
-                }
-                print_execution(PC/3, "JPC", IR, PC, BP, SP, DP, pas, GP);
-                break;
-
-          // SYS
-          case 9:
-              switch(IR->M)
-              {
-                  case 1:
-                      printf("Top of Stack Value: ###########");
-                     if (BP == GP)
-                     {
-                         printf("%d", pas[DP]);
-                         DP = DP -1;
-                     }
-                     else
-                     {
-                          printf("%d", pas[SP]);
-                          SP = SP + 1;
-                     }
-                    break;
-                    
-                  case 2:
-                    printf("Please Enter an Integer: ");
-                    scanf("%d", &pas[DP]);
-                     if (BP == GP)
-                     {
-                          DP = DP + 1;
-                     }
-                     else
-                     {
-                          SP = SP - 1;
-                          scanf("%d", &pas[SP]);
-                     }
-                    break;
-                  case 3:
-                      halt = 0;
-                      break;
-                      
-             }
-            print_execution(PC/3, "SYS", IR, PC, BP, SP, DP, pas, GP);
-             break;
-             
+                         
          default: printf("err\t");
          
         }
