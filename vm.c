@@ -444,7 +444,7 @@ int main(int argc, char *argv[])
          
         }
     }
-    fclose(ipf);
+    fclose(ifp);
     return 0;
 }
 
