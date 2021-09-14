@@ -8,9 +8,6 @@
 // Global Variables
 #define MAX_PAS_LENGTH 500
 
-/*// For printing
-char *opname[] =  { "", "LIT", "OPR", "LOD", "STO", "CAL", "INC", "JMP", "JPC", "SYS", "NEG", "ADD", "SUB", "MUL", "DIV", "ODD", "MOD", "EQL", "NEQ", "LSS", "LEQ", "GTR", "GEQ"};
-*/
 struct instruction
 {
     int OP;         // Operation code
@@ -56,11 +53,19 @@ int main(int argc, char *argv[])
     ifp = fopen(argv[1], "r");
     
     int pas[MAX_PAS_LENGTH];
+    int halt = 1;
     int i;          // temporary variables for scanning input
     struct instruction *IR = malloc(sizeof(struct instruction));
    
     // Initial Values
     int IC = 0;
+    
+    // Scan in registers from input
+    while (fscanf(ifp, "%d", &pas[IC]) != EOF)
+    {
+        IC++;
+    }
+    
     int GP = IC;
     int DP = IC - 1;
     // FREE = IC + 40
@@ -73,22 +78,16 @@ int main(int argc, char *argv[])
         pas[i] = 0;
     }
     
-    i = 0;
-    // Scan in registers from input
-    while (fscanf(ifp, "%d", &pas[i]) != EOF)
-    {
-        i++;
-    }
-    
     // Print headers
-    printf("    PC   BP   SP   DP   data\n");
+    printf("\tPC\tBP\tSP\tDP\tdata\n");
+    printf("Initial Values: %d\t%d\t%d\t%d\n", PC, BP, SP, DP);
     
-    while (PC <= i)
+    while (halt == 1)
     {
         // Fetch Cycle
         IR->OP = pas[PC];
-        IR->L = pas[PC+1];
-        IR->M = pas[PC+2];
+        IR->L = pas[PC + 1];
+        IR->M = pas[PC + 2];
         PC += 3;
         // Execute Cycle
 
@@ -96,19 +95,19 @@ int main(int argc, char *argv[])
         {
             //LIT
             case 1:
-            if(BP == GP)
-            {
-                DP = DP+1;
-                pas[DP] = IR->M;
-            }
-            else
-            {
-                SP = SP-1;
-                pas[SP] = IR->M;
-            }
-            print_execution(PC/3, "LIT", IR, PC, BP, SP, DP, pas, GP);
-            break;
-            
+                if(BP == GP)
+                {
+                    DP = DP+1;
+                    pas[DP] = IR->M;
+                }
+                else
+                {
+                    SP = SP-1;
+                    pas[SP] = IR->M;
+                }
+                print_execution(PC/3, "LIT", IR, PC, BP, SP, DP, pas, GP);
+                break;
+                
             // OPR
             case 2:
                 switch(IR->M)
@@ -420,33 +419,41 @@ int main(int argc, char *argv[])
           case 9:
               switch(IR->M)
               {
-                 if (BP == GP)
-                 {
-                     printf("%d", pas[DP]);
-                     DP = DP -1;
-                 }
-                 else
-                 {
-                      printf("%d", pas[SP]);
-                      SP = SP + 1;
-                 }
-
-                 if (BP == GP)
-                 {
-                      DP = DP + 1;
-                      printf("Please Enter an Integer: ");
-                      scanf("%d", &pas[DP]);
-                 }
-                 else
-                 {
-                      SP = SP - 1;
-                      scanf("%d", &pas[SP]);
-                 }
+                  case 1:
+                      printf("Top of Stack Value: ###########");
+                     if (BP == GP)
+                     {
+                         printf("%d", pas[DP]);
+                         DP = DP -1;
+                     }
+                     else
+                     {
+                          printf("%d", pas[SP]);
+                          SP = SP + 1;
+                     }
+                    break;
+                    
+                  case 2:
+                    printf("Please Enter an Integer: ");
+                    scanf("%d", &pas[DP]);
+                     if (BP == GP)
+                     {
+                          DP = DP + 1;
+                     }
+                     else
+                     {
+                          SP = SP - 1;
+                          scanf("%d", &pas[SP]);
+                     }
+                    break;
+                  case 3:
+                      halt = 0;
+                      break;
+                      
              }
              break;
              
-             
-         default: printf("err\t");
+         //default: printf("err\t");
          
         }
     }
