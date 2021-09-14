@@ -107,18 +107,15 @@ int main(int argc, char *argv[])
                 print_execution(PC/3, "LIT", IR, PC, BP, SP, DP, pas, GP);
                 break;
                 
-            // OPR
+            //RTN
             case 2:
-                switch(IR->M)
-                {
-                    //RTN
-                    case 0:
-                        SP = BP + 1;
-                        BP = pas[SP-2];
-                        PC = pas[SP-3];
-                        print_execution(PC/3, "RTN", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-                    //LOD
+                SP = BP + 1;
+                BP = pas[SP-2];
+                PC = pas[SP-3];
+                print_execution(PC/3, "RTN", IR, PC, BP, SP, DP, pas, GP);
+                break;
+                
+            //LOD
             case 3:
                 if(BP == GP)
                 {
@@ -246,6 +243,10 @@ int main(int argc, char *argv[])
              }
             print_execution(PC/3, "SYS", IR, PC, BP, SP, DP, pas, GP);
              break;
+             
+            case 10:
+                switch(IR->M)
+                {
 
                     //NEG
                     case 1:
@@ -444,8 +445,6 @@ int main(int argc, char *argv[])
          
         }
     }
-    fclose(ifp);
+	fclose(ifp);
     return 0;
 }
-
-                             
