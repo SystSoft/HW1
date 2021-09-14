@@ -60,6 +60,10 @@ int main(int argc, char *argv[])
     // Initial Values
     int IC = 0;
     
+    for (i = 0; i < MAX_PAS_LENGTH; i++)
+    {
+        pas[i] = 0;
+    }
     // Scan in registers from input
     while (fscanf(ifp, "%d", &pas[IC]) != EOF)
     {
@@ -73,11 +77,6 @@ int main(int argc, char *argv[])
     int PC = 0;         // Program counter
     int SP = MAX_PAS_LENGTH;
     
-    for (i = 0; i < MAX_PAS_LENGTH; i++)
-    {
-        pas[i] = 0;
-    }
-    
     // Print headers
     printf("\tPC\tBP\tSP\tDP\tdata\n");
     printf("Initial Values: %d\t%d\t%d\t%d\n", PC, BP, SP, DP);
@@ -89,8 +88,8 @@ int main(int argc, char *argv[])
         IR->L = pas[PC + 1];
         IR->M = pas[PC + 2];
         PC += 3;
+   
         // Execute Cycle
-
         switch(IR->OP)
         {
             //LIT
@@ -165,7 +164,6 @@ int main(int argc, char *argv[])
 
                     //MUL
                     case 4:
-                        
                         if(BP == GP)
                         {
                             DP = DP-1;
@@ -181,7 +179,6 @@ int main(int argc, char *argv[])
 
                     //DIV
                     case 5:
-                        
                         if(BP == GP)
                         {
                             DP = DP-1;
@@ -197,7 +194,6 @@ int main(int argc, char *argv[])
 
                     //ODD
                     case 6:
-                       
                         if(BP == GP)
                         {
                             pas[DP] = pas[DP] % 2;
@@ -211,7 +207,6 @@ int main(int argc, char *argv[])
 
                     //MOD
                     case 7:
-                       
                         if(BP == GP)
                         {
                             DP = DP-1;
@@ -227,7 +222,6 @@ int main(int argc, char *argv[])
 
                     //EQL
                     case 8:
-                      
                         if(BP == GP)
                         {
                             DP = DP-1;
@@ -243,7 +237,6 @@ int main(int argc, char *argv[])
 
                     //NEQ
                     case 9:
-                    
                         if(BP == GP)
                         {
                             DP = DP-1;
@@ -259,7 +252,6 @@ int main(int argc, char *argv[])
 
                     //LSS
                     case 10:
-               
                         if(BP == GP)
                         {
                             DP = DP-1;
@@ -275,7 +267,6 @@ int main(int argc, char *argv[])
 
                     //LEQ
                     case 11:
-                       
                         if(BP == GP)
                         {
                             DP = DP-1;
@@ -291,7 +282,6 @@ int main(int argc, char *argv[])
 
                     //GTR
                     case 12:
-                        
                         if(BP == GP)
                         {
                             DP = DP - 1;
@@ -307,7 +297,6 @@ int main(int argc, char *argv[])
 
                     //GEQ
                     case 13:
-                      
                         if(BP == GP)
                         {
                             DP = DP-1;
@@ -325,7 +314,6 @@ int main(int argc, char *argv[])
                 
             //LOD
             case 3:
-                
                 if(BP == GP)
                 {
                     DP = DP+1;
@@ -346,7 +334,6 @@ int main(int argc, char *argv[])
 
             //STO
             case 4:
-               
                 if(BP == GP)
                 {
                     pas[GP+IR->M] = pas[DP];
@@ -367,17 +354,16 @@ int main(int argc, char *argv[])
 
             //CAL
             case 5:
-              
                 pas[SP-1] = base(IR->L, pas, BP);
                 pas[SP-2] = BP;
                 pas[SP-3] = PC;
                 BP = SP-1;
                 PC = IR->M;
+                print_execution(PC/3, "CAL", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //INC
             case 6:
-      
                 if(BP == GP)
                 {
                     DP = DP+IR->M;
@@ -386,17 +372,17 @@ int main(int argc, char *argv[])
                 {
                     SP = SP-IR->M;
                 }
+                print_execution(PC/3, "INC", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //JMP
             case 7:
-              
                 PC = IR->M;
+                print_execution(PC/3, "JMP", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //JPC
             case 8:
-        
                 if(BP == GP)
                 {
                     if(pas[DP] == 0)
@@ -413,6 +399,7 @@ int main(int argc, char *argv[])
                     }
                     SP = SP+1;
                 }
+                print_execution(PC/3, "JPC", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
           // SYS
@@ -451,9 +438,10 @@ int main(int argc, char *argv[])
                       break;
                       
              }
+            print_execution(PC/3, "SYS", IR, PC, BP, SP, DP, pas, GP);
              break;
              
-         //default: printf("err\t");
+         default: printf("err\t");
          
         }
     }
