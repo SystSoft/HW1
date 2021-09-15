@@ -1,6 +1,6 @@
-/* Fall 2021 COP 3402 HW1 */
-/* Anjaly Davis, Jennifer Nguyen */
-/* September 15th, 2021 */
+/* Fall 2021 COP 3402 HW1
+   Anjaly Davis, Jennifer Nguyen 
+   September 15th, 2021 */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -407,7 +407,7 @@ int main(int argc, char *argv[])
               switch(IR->M)
               {
                   case 1:
-                      printf("Top of Stack Value: ###########");
+                      printf("Top of Stack Value:");
                      if (BP == GP)
                      {
                          printf("%d", pas[DP]);
@@ -446,6 +446,7 @@ int main(int argc, char *argv[])
         }
     }
     fclose(ifp);
+    free(IR);
     return 0;
 }
 
