@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
         PC += 3;
         int line = (PC/3)-1;
 
-        printf("DP: %d \n", pas[DP]);
         // Execute Cycle
         switch(IR->OP)
         {
@@ -408,7 +407,7 @@ int main(int argc, char *argv[])
               switch(IR->M)
               {
                   case 1:
-                      printf("Top of Stack Value: ");
+                      printf("Top of Stack Value:");
                      if (BP == GP)
                      {
                          printf("%d\n", pas[DP]);
