@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     int SP = MAX_PAS_LENGTH;
     
     // Print headers
-    printf("\tPC\tBP\tSP\tDP\tdata\n");
+    printf("\t\tPC\tBP\tSP\tDP\tdata\n");
     printf("Initial Values: %d\t%d\t%d\t%d\n", PC, BP, SP, DP);
     
     while (halt == 1)
@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
         IR->M = pas[PC + 2];
         PC += 3;
         int line = (PC/3)-1;
-        printf("HERE HRE %d \n", pas[DP]);
         // Execute Cycle
         switch(IR->OP)
         {
@@ -411,7 +410,7 @@ int main(int argc, char *argv[])
                       printf("Top of Stack Value:");
                      if (BP == GP)
                      {
-                         printf("%d", pas[DP]);
+                         printf("%d\n", pas[DP]);
                          DP = DP -1;
                      }
                      else
