@@ -19,7 +19,7 @@ void print_execution(int line, char *opname, struct instruction *IR, int PC, int
 {
     int i;
     // print out instruction and registers
-    printf("%2d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t", line, opname, IR->L, IR->M, PC, BP, SP, DP);
+    printf("%d\t%s\t%d\t%d\t%d\t%d\t%d\t%d\t", line, opname, IR->L, IR->M, PC, BP, SP, DP);
     
     // print data section
     for (i = GP; i <= DP; i++)
@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
         IR->L = pas[PC + 1];
         IR->M = pas[PC + 2];
         PC += 3;
-   
+        int line = (PC/3)-1;
         // Execute Cycle
         switch(IR->OP)
         {
@@ -104,15 +104,212 @@ int main(int argc, char *argv[])
                     SP = SP-1;
                     pas[SP] = IR->M;
                 }
-                print_execution(PC/3, "LIT", IR, PC, BP, SP, DP, pas, GP);
+                print_execution(line, "LIT", IR, PC, BP, SP, DP, pas, GP);
                 break;
                 
-            //RTN
+            // OPR
             case 2:
-                SP = BP + 1;
-                BP = pas[SP-2];
-                PC = pas[SP-3];
-                print_execution(PC/3, "RTN", IR, PC, BP, SP, DP, pas, GP);
+                switch(IR->M)
+                {
+                    //RTN
+                    case 0:
+                        SP = BP + 1;
+                        BP = pas[SP-2];
+                        PC = pas[SP-3];
+                        print_execution(line, "RTN", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //NEG
+                    case 1:
+                        if(BP == GP)
+                        {
+                            pas[DP] = -1*pas[DP];
+                        }
+                        else
+                        {
+                            pas[SP] = -1*pas[SP];
+                        }
+                        print_execution(line, "NEG", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //ADD
+                    case 2:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] + pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] + pas[SP-1];
+                        }
+                        print_execution(line, "ADD", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //SUB
+                    case 3:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] - pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] - pas[SP-1];
+                        }
+                        print_execution(line, "SUB", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //MUL
+                    case 4:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] * pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] * pas[SP-1];
+                        }
+                        print_execution(line, "MUL", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //DIV
+                    case 5:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] / pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] / pas[SP-1];
+                        }
+                        print_execution(line, "DIV", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //ODD
+                    case 6:
+                        if(BP == GP)
+                        {
+                            pas[DP] = pas[DP] % 2;
+                        }
+                        else
+                        {
+                            pas[SP] = pas[SP] % 2;
+                        }
+                        print_execution(line, "ODD", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //MOD
+                    case 7:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] % pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] % pas[SP-1];
+                        }
+                        print_execution(line, "MOD", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //EQL
+                    case 8:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] == pas[DP+1];
+                        }
+                        else
+                        {
+                            SP= SP+1;
+                            pas[SP] = pas[SP] == pas[SP-1];
+                        }
+                        print_execution(line, "EQL", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //NEQ
+                    case 9:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] != pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] != pas[SP-1];
+                        }
+                        print_execution(line, "NEQ", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //LSS
+                    case 10:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] < pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] < pas[SP-1];
+                        }
+                        print_execution(line, "LSS", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //LEQ
+                    case 11:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] <= pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] <= pas[SP-1];
+                        }
+                        print_execution(line, "LEQ", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //GTR
+                    case 12:
+                        if(BP == GP)
+                        {
+                            DP = DP - 1;
+                            pas[DP] = pas[DP] > pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] > pas[SP-1];
+                        }
+                        print_execution(line, "GTR", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+
+                    //GEQ
+                    case 13:
+                        if(BP == GP)
+                        {
+                            DP = DP-1;
+                            pas[DP] = pas[DP] >= pas[DP+1];
+                        }
+                        else
+                        {
+                            SP = SP+1;
+                            pas[SP] = pas[SP] >= pas[SP-1];
+                        }
+                        print_execution(line, "GEQ", IR, PC, BP, SP, DP, pas, GP);
+                        break;
+                }
                 break;
                 
             //LOD
@@ -132,7 +329,7 @@ int main(int argc, char *argv[])
                     SP = SP-1;
                     pas[SP] = pas[base(IR->L, pas, BP)-IR->M];
                 }
-                print_execution(PC/3, "LOD", IR, PC, BP, SP, DP, pas, GP);
+                print_execution(line, "LOD", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //STO
@@ -152,7 +349,7 @@ int main(int argc, char *argv[])
                     pas[base(IR->L, pas, BP)-IR->M] = pas[SP];
                     SP = SP+1;
                 }
-                print_execution(PC/3, "STO", IR, PC, BP, SP, DP, pas, GP);
+                print_execution(line, "STO", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //CAL
@@ -162,7 +359,7 @@ int main(int argc, char *argv[])
                 pas[SP-3] = PC;
                 BP = SP-1;
                 PC = IR->M;
-                print_execution(PC/3, "CAL", IR, PC, BP, SP, DP, pas, GP);
+                print_execution(line, "CAL", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //INC
@@ -175,13 +372,13 @@ int main(int argc, char *argv[])
                 {
                     SP = SP-IR->M;
                 }
-                print_execution(PC/3, "INC", IR, PC, BP, SP, DP, pas, GP);
+                print_execution(line, "INC", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //JMP
             case 7:
                 PC = IR->M;
-                print_execution(PC/3, "JMP", IR, PC, BP, SP, DP, pas, GP);
+                print_execution(line, "JMP", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
             //JPC
@@ -202,7 +399,7 @@ int main(int argc, char *argv[])
                     }
                     SP = SP+1;
                 }
-                print_execution(PC/3, "JPC", IR, PC, BP, SP, DP, pas, GP);
+                print_execution(line, "JPC", IR, PC, BP, SP, DP, pas, GP);
                 break;
 
           // SYS
@@ -241,210 +438,15 @@ int main(int argc, char *argv[])
                       break;
                       
              }
-            print_execution(PC/3, "SYS", IR, PC, BP, SP, DP, pas, GP);
+            print_execution(line, "SYS", IR, PC, BP, SP, DP, pas, GP);
              break;
              
-            case 10:
-                switch(IR->M)
-                {
-
-                    //NEG
-                    case 1:
-                        if(BP == GP)
-                        {
-                            pas[DP] = -1*pas[DP];
-                        }
-                        else
-                        {
-                            pas[SP] = -1*pas[SP];
-                        }
-                        print_execution(PC/3, "NEG", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //ADD
-                    case 2:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] + pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] + pas[SP-1];
-                        }
-                        print_execution(PC/3, "ADD", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //SUB
-                    case 3:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] - pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] - pas[SP-1];
-                        }
-                        print_execution(PC/3, "SUB", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //MUL
-                    case 4:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] * pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] * pas[SP-1];
-                        }
-                        print_execution(PC/3, "MUL", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //DIV
-                    case 5:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] / pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] / pas[SP-1];
-                        }
-                        print_execution(PC/3, "DIV", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //ODD
-                    case 6:
-                        if(BP == GP)
-                        {
-                            pas[DP] = pas[DP] % 2;
-                        }
-                        else
-                        {
-                            pas[SP] = pas[SP] % 2;
-                        }
-                        print_execution(PC/3, "ODD", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //MOD
-                    case 7:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] % pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] % pas[SP-1];
-                        }
-                        print_execution(PC/3, "MOD", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //EQL
-                    case 8:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] == pas[DP+1];
-                        }
-                        else
-                        {
-                            SP= SP+1;
-                            pas[SP] = pas[SP] == pas[SP-1];
-                        }
-                        print_execution(PC/3, "EQL", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //NEQ
-                    case 9:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] != pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] != pas[SP-1];
-                        }
-                        print_execution(PC/3, "NEQ", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //LSS
-                    case 10:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] < pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] < pas[SP-1];
-                        }
-                        print_execution(PC/3, "LSS", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //LEQ
-                    case 11:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] <= pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] <= pas[SP-1];
-                        }
-                        print_execution(PC/3, "LEQ", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //GTR
-                    case 12:
-                        if(BP == GP)
-                        {
-                            DP = DP - 1;
-                            pas[DP] = pas[DP] > pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] > pas[SP-1];
-                        }
-                        print_execution(PC/3, "GTR", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-
-                    //GEQ
-                    case 13:
-                        if(BP == GP)
-                        {
-                            DP = DP-1;
-                            pas[DP] = pas[DP] >= pas[DP+1];
-                        }
-                        else
-                        {
-                            SP = SP+1;
-                            pas[SP] = pas[SP] >= pas[SP-1];
-                        }
-                        print_execution(PC/3, "GEQ", IR, PC, BP, SP, DP, pas, GP);
-                        break;
-                }
-                break;
-                         
          default: printf("err\t");
          
         }
     }
-	fclose(ifp);
+    fclose(ifp);
     return 0;
 }
+
+                             
