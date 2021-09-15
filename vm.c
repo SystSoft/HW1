@@ -29,7 +29,6 @@ void print_execution(int line, char *opname, struct instruction *IR, int PC, int
     
     // print stack
     printf("\tstack : ");
-    
     for (i = MAX_PAS_LENGTH - 1; i >= SP; i--)
         printf("%d ", pas[i]);
     
@@ -89,6 +88,8 @@ int main(int argc, char *argv[])
         IR->M = pas[PC + 2];
         PC += 3;
         int line = (PC/3)-1;
+
+        printf("DP: %d \n", pas[DP]);
         // Execute Cycle
         switch(IR->OP)
         {
@@ -229,7 +230,7 @@ int main(int argc, char *argv[])
                         }
                         else
                         {
-                            SP= SP+1;
+                            SP = SP+1;
                             pas[SP] = pas[SP] == pas[SP-1];
                         }
                         print_execution(line, "EQL", IR, PC, BP, SP, DP, pas, GP);
@@ -319,7 +320,7 @@ int main(int argc, char *argv[])
                     DP = DP+1;
                     pas[DP] = pas[GP+IR->M];
                 }
-                else if(base(IR->L, pas, BP) == GP)
+                else if((base(IR->L, pas, BP)) == GP)
                 {
                     SP = SP-1;
                     pas[SP] = pas[GP+IR->M];
@@ -327,7 +328,7 @@ int main(int argc, char *argv[])
                 else
                 {
                     SP = SP-1;
-                    pas[SP] = pas[base(IR->L, pas, BP)-IR->M];
+                    pas[SP] = pas[(base(IR->L, pas, BP))-IR->M];
                 }
                 print_execution(line, "LOD", IR, PC, BP, SP, DP, pas, GP);
                 break;
@@ -339,14 +340,14 @@ int main(int argc, char *argv[])
                     pas[GP+IR->M] = pas[DP];
                     DP = DP-1;
                 }
-                else if(base(IR->L, pas, BP) == GP)
+                else if((base(IR->L, pas, BP)) == GP)
                 {
                     pas[GP+IR->M] = pas[SP];
                     SP = SP+1;
                 }
                 else
                 {
-                    pas[base(IR->L, pas, BP)-IR->M] = pas[SP];
+                    pas[(base(IR->L, pas, BP))-IR->M] = pas[SP];
                     SP = SP+1;
                 }
                 print_execution(line, "STO", IR, PC, BP, SP, DP, pas, GP);
@@ -366,11 +367,11 @@ int main(int argc, char *argv[])
             case 6:
                 if(BP == GP)
                 {
-                    DP = DP + (IR->M);
+                    DP += IR->M;
                 }
                 else
                 {
-                    SP = SP - (IR->M);
+                    SP -= IR->M;
                 }
                 print_execution(line, "INC", IR, PC, BP, SP, DP, pas, GP);
                 break;
@@ -407,7 +408,7 @@ int main(int argc, char *argv[])
               switch(IR->M)
               {
                   case 1:
-                      printf("Top of Stack Value:");
+                      printf("Top of Stack Value: ");
                      if (BP == GP)
                      {
                          printf("%d\n", pas[DP]);
@@ -437,7 +438,6 @@ int main(int argc, char *argv[])
                   case 3:
                       halt = 0;
                       break;
-                      
              }
             print_execution(line, "SYS", IR, PC, BP, SP, DP, pas, GP);
              break;
