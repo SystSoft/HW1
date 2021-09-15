@@ -1,5 +1,5 @@
 /* Fall 2021 COP 3402 HW1
-   Anjaly Davis, Jennifer Nguyen 
+   Anjaly Davis, Jennifer Nguyen
    September 15th, 2021 */
 
 #include <stdio.h>
@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
         IR->M = pas[PC + 2];
         PC += 3;
         int line = (PC/3)-1;
+        printf("HERE HRE %d \n", pas[DP]);
         // Execute Cycle
         switch(IR->OP)
         {
@@ -366,11 +367,11 @@ int main(int argc, char *argv[])
             case 6:
                 if(BP == GP)
                 {
-                    DP = DP+IR->M;
+                    DP = DP + (IR->M);
                 }
                 else
                 {
-                    SP = SP-IR->M;
+                    SP = SP - (IR->M);
                 }
                 print_execution(line, "INC", IR, PC, BP, SP, DP, pas, GP);
                 break;
@@ -422,10 +423,10 @@ int main(int argc, char *argv[])
                     
                   case 2:
                     printf("Please Enter an Integer: ");
-                    scanf("%d", &pas[DP]);
                      if (BP == GP)
                      {
                           DP = DP + 1;
+                          scanf("%d", &pas[DP]);
                      }
                      else
                      {
@@ -433,6 +434,7 @@ int main(int argc, char *argv[])
                           scanf("%d", &pas[SP]);
                      }
                     break;
+                      
                   case 3:
                       halt = 0;
                       break;
@@ -449,5 +451,3 @@ int main(int argc, char *argv[])
     free(IR);
     return 0;
 }
-
-                             
