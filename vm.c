@@ -407,7 +407,7 @@ int main(int argc, char *argv[])
               switch(IR->M)
               {
                   case 1:
-                      printf("Top of Stack Value:");
+                      printf("Top of Stack Value: ");
                      if (BP == GP)
                      {
                          printf("%d\n", pas[DP]);
